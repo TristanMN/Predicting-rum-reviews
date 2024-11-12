@@ -1,16 +1,8 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.chrome.options import Options
 import requests
 import pandas as pd
 from bs4 import BeautifulSoup
-from googletrans import Translator
-import time
 from deep_translator import GoogleTranslator
-import random
+import re
 
 # #set directory to the ChromeDriver
 # #chrome_options = Options()
@@ -66,6 +58,7 @@ df = pd.DataFrame(columns=['RumName', 'Rating', 'OpinionTitle', 'Opinion'])
 
 for page in range(1, 401):
     url = f"https://rumratings.com/stream?fbclid=IwZXh0bgNhZW0CMTEAAR17zZK1w5IpesswHRzuKq7IgMKVx-Ilwi2q6CSer71kOLCw9sMyID7Z3IU_aem_m2iHrEeu6-4q-SskrI2etw&page={page}"
+    # url = f"https://rumratings.com/stream?page={page}"
     response = requests.get(url, headers=headers)
 
     #page_source = driver.page_source
@@ -86,11 +79,17 @@ for page in range(1, 401):
                 translated_opinion = translator.translate(opinion)
 
                 name_div = review.find('div', class_='c-review-comment__posted-on')
-                name = name_div.find('a').get_text()
+                rum_name = name_div.find('a').get_text()
+                rum_link = name_div.find('a').get('href')
 
                 rating_div = review.find('div', class_='c-review-comment__content-header').find('h3')
                 opinion_title = rating_div.find('div').get_text().strip()
                 rating = rating_div.find('div', class_='rating-and-divider').find('span').get_text().strip()    #to delete white signs
+                ratings_link = rating_div.find('a', text=re.compile(r'\d+ ratings'))
+                if ratings_link:
+                    user_review_count = int(ratings_link.text.split()[0])
+                else:
+                    user_review_count = 0
 
                 # if detected_language != 'en':
                 #     opinion = translator.translate(opinion, dest='en').text  #translation to the English language
@@ -102,7 +101,17 @@ for page in range(1, 401):
                     opinion = translated_opinion
                     opinion_title = translator.translate(opinion_title)
 
-                new_row = pd.DataFrame({'RumName': name, 'Rating': rating, 'OpinionTitle': opinion_title, 'Opinion': opinion}, index=[0])
+                new_row = pd.DataFrame(
+                    {
+                    'RumName': rum_name,
+                    'RumLink': rum_link,
+                    'Rating': rating,
+                    'OpinionTitle': opinion_title,
+                    'Opinion': opinion,
+                    'UserReviewCount': user_review_count,
+                    # 'User': user_name,
+                    },
+                    index=[0])
                 df = pd.concat([df, new_row], ignore_index=True)
             except AttributeError as e:
                 print(f"Attribute error, page number {page}, opinion {i+1}: {e}")
