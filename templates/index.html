@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rum Review Predictor</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>Rum Review Predictor</h1>
+        <p>Discover the perfect score for your rum reviews 🍹</p>
+      </header>
+
+      <main class="main">
+        <form id="reviewForm">
+          <textarea
+            name="review"
+            id="reviewInput"
+            placeholder="Write your rum review here..."
+            rows="5"
+            required
+          ></textarea>
+          <button type="submit" class="submit-btn">Get Rating</button>
+        </form>
+        <div id="result" class="result"></div>
+      </main>
+
+      <footer class="footer">
+        <p>Created with 🍹 for rum lovers.</p>
+      </footer>
+    </div>
+
+    <script>
+      document
+        .getElementById("reviewForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const reviewInput = document
+            .getElementById("reviewInput")
+            .value.trim();
+          const resultDiv = document.getElementById("result");
+
+          if (reviewInput.replace(/\s/g, "").length < 60) {
+            resultDiv.textContent =
+              "Please write a review of at least 60 characters, excluding spaces.";
+            return;
+          }
+
+          try {
+            const response = await fetch("/predict", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: new URLSearchParams({ review: reviewInput }),
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              resultDiv.innerHTML = `<p>Your predicted rating: <strong>${data.rating}</strong></p>`;
+            } else {
+              resultDiv.textContent =
+                "Failed to get the rating. Please try again.";
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            resultDiv.textContent =
+              "An error occurred. Please try again later.";
+          }
+        });
+    </script>
+  </body>
+</html>

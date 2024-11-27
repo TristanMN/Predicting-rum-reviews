@@ -1,0 +1,130 @@
+/* General Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Font and Background */
+body {
+  font-family: "Roboto", sans-serif;
+  background: linear-gradient(
+      to bottom,
+      rgba(18, 32, 47, 0.9),
+      rgba(35, 55, 77, 0.95)
+    ),
+    url("https://images.unsplash.com/photo-1559251606-c623743a6a78") no-repeat
+      center center fixed;
+  background-size: cover;
+  color: #fefefe;
+}
+
+/* Container Setup */
+.container {
+  max-width: 900px;
+  margin: 5% auto;
+  padding: 2rem;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.7);
+  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(10px);
+  overflow: hidden;
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+/* Header */
+.header {
+  text-align: center;
+  margin-bottom: 1.5rem;
+}
+
+.header h1 {
+  font-family: "Playfair Display", serif;
+  font-size: 2.8rem;
+  margin-bottom: 0.5rem;
+  color: #ffcc00;
+}
+
+.header p {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #eaeaea;
+  animation: slideUp 1s ease-in-out;
+}
+
+/* Form */
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+textarea {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-family: "Roboto", sans-serif;
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+  resize: none;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+textarea:focus {
+  outline: none;
+  background: rgba(255, 255, 255, 0.5);
+  transform: scale(1.03);
+}
+
+.submit-btn {
+  font-size: 1.2rem;
+  font-weight: 500;
+  padding: 0.8rem 2rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #333;
+  background: #ffcc00;
+  transition: background 0.3s ease, transform 0.2s ease;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.submit-btn:hover {
+  background: #e6b800;
+  transform: translateY(-3px);
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  color: #aaa;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

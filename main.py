@@ -49,7 +49,7 @@ import re
 # #         break
 
 headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/85.0.4183.102 Safari/537.36"
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4324.182 Safari/537.36"
 }
 
 #translator = Translator()
@@ -60,6 +60,7 @@ for page in range(1, 401):
     url = f"https://rumratings.com/stream?fbclid=IwZXh0bgNhZW0CMTEAAR17zZK1w5IpesswHRzuKq7IgMKVx-Ilwi2q6CSer71kOLCw9sMyID7Z3IU_aem_m2iHrEeu6-4q-SskrI2etw&page={page}"
     # url = f"https://rumratings.com/stream?page={page}"
     response = requests.get(url, headers=headers)
+    # print(response.raw)
 
     #page_source = driver.page_source
     if response.status_code == 200:
