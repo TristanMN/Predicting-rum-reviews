@@ -8,15 +8,11 @@
 /* Font and Background */
 body {
   font-family: "Roboto", sans-serif;
-  background: linear-gradient(
-      to bottom,
-      rgba(18, 32, 47, 0.9),
-      rgba(35, 55, 77, 0.95)
-    ),
-    url("https://images.unsplash.com/photo-1559251606-c623743a6a78") no-repeat
-      center center fixed;
+  background: url("background.jpg") no-repeat top center fixed;
+  background-position: center 5%;
   background-size: cover;
   color: #fefefe;
+  overflow-x: hidden;
 }
 
 /* Container Setup */
@@ -25,9 +21,9 @@ body {
   margin: 5% auto;
   padding: 2rem;
   border-radius: 12px;
-  background: rgba(0, 0, 0, 0.7);
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.6);
-  backdrop-filter: blur(10px);
+  background: rgba(0, 0, 0, 0.6);
+  box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(15px);
   overflow: hidden;
   animation: fadeIn 1.2s ease-in-out;
 }
@@ -35,7 +31,7 @@ body {
 /* Header */
 .header {
   text-align: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
 }
 
 .header h1 {
@@ -57,10 +53,12 @@ form {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 
 textarea {
   width: 100%;
+  max-width: 100%;
   padding: 1rem;
   border: none;
   border-radius: 8px;
@@ -98,12 +96,45 @@ textarea:focus {
   transform: translateY(-3px);
 }
 
+/* Result Styling */
+.result {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 1.2rem;
+  color: #ffcc00;
+}
+
 /* Footer */
 .footer {
   text-align: center;
   margin-top: 1.5rem;
   font-size: 0.9rem;
   color: #aaa;
+}
+
+/* Mobile Responsiveness */
+@media screen and (max-width: 600px) {
+  .container {
+    padding: 1.5rem;
+    margin: 2% auto;
+  }
+
+  .header h1 {
+    font-size: 2rem;
+  }
+
+  textarea {
+    font-size: 0.9rem;
+  }
+
+  .submit-btn {
+    font-size: 1rem;
+    padding: 0.6rem 1.5rem;
+  }
+
+  .footer {
+    font-size: 0.8rem;
+  }
 }
 
 /* Animations */

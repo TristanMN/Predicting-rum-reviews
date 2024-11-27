@@ -9,7 +9,6 @@ import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from nltk.corpus import wordnet
-import joblib  # Use joblib for scikit-learn models
 import pandas as pd
 nltk.download('averaged_perceptron_tagger_eng')
 print("Initializing Flask app")
