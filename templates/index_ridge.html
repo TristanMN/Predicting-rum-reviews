@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rum Review Predictor</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles_ridge.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      .loading-spinner {
+        display: none;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #3498db;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 20px auto;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <header class="header">
+        <h1>Rum Review Predictor</h1>
+        <p>Discover the score from a rum review</p>
+      </header>
+
+      <main class="main">
+        <form id="reviewForm">
+          <input
+            type="text"
+            name="title"
+            id="titleInput"
+            placeholder="Enter the title of your review..."
+            required
+            value="A challenging and complex rum that demands attention and rewards patience, especially when a touch of water is added to unlock its more subtle characteristics"
+          />
+          <textarea
+            name="review"
+            id="reviewInput"
+            placeholder="Write your rum review here..."
+            rows="10"
+            required
+          >
+          This is a blend of Barbados, Guyana and Jamaican rums made of molasses, matured in second-fill bourbon barrels for three to five years. It's bottled in Scotland and non chill filtered. No sugar is added to the rum.
+
+          The rum presents itself with a deep amber hue, lingering in the glass with its thick, oily consistency.
+          
+          The nose is a fascinating journey through unexpected scents. Sweet dark chocolate intertwines with noticeable but mellow licorice, while a twist of overripe pineapple adds intrigue and funk coming from the Jamaican part of this blend. Hints of cherry and caramel provide a suggestive sweetness, punctuated by an odd but intriguing note of a rubber seal in an old car. Burnt brown sugar rounds out the complex bouquet.
+          
+          On the palate, this rum delivers a robust flavor profile. Dark chocolate and licorice dominate, supported by the distinctive tang of a strong earl grey tea. Oak and walnut provide a woody backbone, while nutmeg adds pleasant spiciness, pepper burns a little too much. This rum burns quite a lot despite its low 46.2% ABV. A single drop of water transforms the experience, softening the heat and allowing the nuanced flavors to shine more clearly.
+          
+          The finish is long, with a subtle bitterness that lingers. A faint chocolate sweetness—like the memory of a chocolate enjoyed an hour ago that now suggests to take a gum to refresh stays for a long time. It is very pleasant.
+        </textarea
+          >
+          <button type="submit" class="submit-btn">Get Rating</button>
+        </form>
+        <div class="loading-spinner" id="loadingSpinner"></div>
+        <div id="result" class="result"></div>
+      </main>
+
+      <footer class="footer">
+        <p>Created with 🍹 for rum lovers.</p>
+      </footer>
+    </div>
+
+    <script>
+      document
+        .getElementById("reviewForm")
+        .addEventListener("submit", async function (event) {
+          event.preventDefault();
+
+          const titleInput = document.getElementById("titleInput").value.trim();
+          const reviewInput = document
+            .getElementById("reviewInput")
+            .value.trim();
+          const resultDiv = document.getElementById("result");
+          const loadingSpinner = document.getElementById("loadingSpinner");
+
+          if (!titleInput || reviewInput.replace(/\s/g, "").length < 60) {
+            resultDiv.textContent =
+              "Please provide a title and a review of at least 60 characters.";
+            return;
+          }
+
+          loadingSpinner.style.display = "block";
+          resultDiv.textContent = "";
+
+          try {
+            const response = await fetch("/predict", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+              body: new URLSearchParams({
+                title: titleInput,
+                review: reviewInput,
+              }),
+            });
+
+            if (response.ok) {
+              const data = await response.json();
+              resultDiv.innerHTML = `<p>Your predicted rating: <strong>${data.rating}</strong></p>`;
+            } else {
+              resultDiv.textContent =
+                "Failed to get the rating. Please try again.";
+            }
+          } catch (error) {
+            console.error("Error:", error);
+            resultDiv.textContent =
+              "An error occurred. Please try again later.";
+          } finally {
+            loadingSpinner.style.display = "none";
+          }
+        });
+    </script>
+  </body>
+</html>

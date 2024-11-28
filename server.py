@@ -16,7 +16,6 @@ app = Flask(__name__)
 app.static_folder = 'static'
 print("Flask app initialized")
 
-# Define preprocessing functions
 def preprocess_text(text):
     text = ''.join(char for char in text if char not in string.punctuation)
     words = [word.lower() for word in text.split() if word not in stopwords.words('english')]
@@ -27,7 +26,6 @@ def preprocess_text(text):
     return lemmatized
 
 print("Loading TFIDF vectorizer")
-# Load TFIDF vectorizer and model
 tfidf = TfidfVectorizer()
 print("Loading processed dataset")
 df = pd.read_csv('processed_data.csv')
@@ -37,7 +35,6 @@ print("Fitting vectorizer")
 tfidf.fit(df['Opinion'])
 
 print("Loading model")
-# Load the RandomForestClassifier model using joblib
 with open('random_forest_model.pkl', 'rb') as f:
     model = pickle.load(f)
 print("Model loded")
@@ -48,22 +45,13 @@ def home():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    # Get the review text from the form data
     review_text = request.form.get("review", "").strip()
     
     if not review_text:
         return jsonify({"error": "No review text provided"}), 400
-
-    # Preprocess the review text
     preprocessed_review = preprocess_text(review_text)
-    
-    # Transform the review text into a vector
     review_vector = tfidf.transform([preprocessed_review]).toarray()
-    
-    # Predict the rating
     rating = model.predict(review_vector)[0]
-    
-    # Return the predicted rating as JSON
     return jsonify({"rating": int(rating)})
 
 if __name__ == "__main__":
